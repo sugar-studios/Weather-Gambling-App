@@ -18,10 +18,12 @@ fun ResultsScreen(navController: NavController) {
             .padding(25.dp)
             .background(MaterialTheme.colorScheme.background)
     ) {
+
         Text(
             text = "Results",
             color = com.example.cupcake.ui.theme.text_black,
-            modifier = Modifier.padding(bottom = 40.dp)
+            modifier = Modifier.padding(bottom = 40.dp,
+                                        top = 40.dp)
         )
 
         Button(
