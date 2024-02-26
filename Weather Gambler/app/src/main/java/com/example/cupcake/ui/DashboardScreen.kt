@@ -20,7 +20,7 @@ fun DashboardScreen(navController: NavController) {
     ) {
         Text(
             text = "Weather",
-            color = Color.Magenta,
+            color = com.example.cupcake.ui.theme.text_black,
             modifier = Modifier.padding(bottom = 40.dp)
         )
 

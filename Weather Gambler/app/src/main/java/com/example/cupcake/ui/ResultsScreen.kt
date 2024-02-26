@@ -20,7 +20,7 @@ fun ResultsScreen(navController: NavController) {
     ) {
         Text(
             text = "Results",
-            color = Color.Magenta,
+            color = com.example.cupcake.ui.theme.text_black,
             modifier = Modifier.padding(bottom = 40.dp)
         )
 
