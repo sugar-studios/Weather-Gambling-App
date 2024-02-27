@@ -52,6 +52,20 @@ fun DashboardScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         Text(text = "Item $item")
+                        Spacer(modifier = Modifier.height(8.dp))
+                        if (item == 1)
+                        {
+                            Text(text = "Today")
+                        }
+                        else if (item == 2)
+                        {
+                            Text(text = "Tomorrow")
+                        }
+                        else if (item == 3)
+                        {
+                            Text(text = "Overmorrow")
+                        }
+
                     }
                 }
             }
