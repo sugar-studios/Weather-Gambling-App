@@ -103,6 +103,11 @@ dependencies {
     implementation ("com.squareup.okhttp3:okhttp:4.9.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
+    implementation("it.skrape:skrapeit:1.2.2")
+    implementation ("com.github.kittinunf.fuel:fuel:2.3.1")
+    implementation ("com.github.kittinunf.fuel:fuel-gson:2.3.1") // For Gson support
+    implementation ("khttp:khttp:1.0.0")
+
 
 
 

@@ -16,8 +16,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,12 +30,24 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cupcake.CupcakeScreen
 import com.example.cupcake.R
+import com.example.cupcake.network.ApiService
+import kotlinx.coroutines.launch
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun DashboardScreen(navController: NavController) {
-    //var WeatherJSON 
     var selectedValue by rememberSaveable { mutableStateOf("") }
+    var weatherJSON by rememberSaveable { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Use LaunchedEffect to fetch data when the Composable enters the Composition
+    LaunchedEffect(key1 = true) {
+        coroutineScope.launch {
+            // Assuming ApiService.fetchJsonData() is a suspend function. If not, wrap the call with withContext(Dispatchers.IO) { ... }
+            val data = ApiService.fetchJsonData()
+            weatherJSON = data
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -47,6 +61,8 @@ fun DashboardScreen(navController: NavController) {
             color = com.example.cupcake.ui.theme.text_white,
             modifier = Modifier.padding(top = 40.dp, bottom = 100.dp)
         )
+
+        Text(text = "Fetched JSON: $weatherJSON")
 
         Row(
             modifier = Modifier
