@@ -1,6 +1,7 @@
 package com.example.cupcake.ui
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -30,22 +30,36 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cupcake.CupcakeScreen
 import com.example.cupcake.R
-import com.example.cupcake.network.ApiService
-import kotlinx.coroutines.launch
+import com.example.cupcake.data.RetrofitClient
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun DashboardScreen(navController: NavController) {
-    var selectedValue by rememberSaveable { mutableStateOf("") }
-    var weatherJSON by rememberSaveable { mutableStateOf("") }
-    val coroutineScope = rememberCoroutineScope()
+    var SelectedBet by rememberSaveable { mutableStateOf("") }
+    var weatherDescription by rememberSaveable { mutableStateOf("") }
+    var feelsLikeTemperature by rememberSaveable { mutableStateOf("") }
 
-    // Use LaunchedEffect to fetch data when the Composable enters the Composition
     LaunchedEffect(key1 = true) {
-        coroutineScope.launch {
-            // Assuming ApiService.fetchJsonData() is a suspend function. If not, wrap the call with withContext(Dispatchers.IO) { ... }
-            val data = ApiService.fetchJsonData()
-            weatherJSON = data
+        try {
+            val response = withContext(Dispatchers.IO) {
+                RetrofitClient.instance.getDailyForecast("Mesa,US", "53c1e06df401200db96ac0cfd1d1ca72").execute()
+            }
+
+            if (response.isSuccessful) {
+                // Assuming the first item in the list is the current weather
+                response.body()?.list?.get(0)?.let { forecast ->
+                    weatherDescription = forecast.weather.first().description
+                    feelsLikeTemperature = "${"%.1f".format(forecast.main.feels_like - 273.15)}°C"
+                    Log.d("DashboardScreen", "Weather: $weatherDescription, $feelsLikeTemperature")
+                }
+            } else {
+                Log.e("DashboardScreen", "Error fetching weather data")
+            }
+        } catch (e: Exception) {
+            Log.e("DashboardScreen", "Exception in fetching weather data", e)
         }
     }
 
@@ -61,8 +75,6 @@ fun DashboardScreen(navController: NavController) {
             color = com.example.cupcake.ui.theme.text_white,
             modifier = Modifier.padding(top = 40.dp, bottom = 100.dp)
         )
-
-        Text(text = "Fetched JSON: $weatherJSON")
 
         Row(
             modifier = Modifier
@@ -92,7 +104,7 @@ fun DashboardScreen(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Weather Desc",
+                        text = weatherDescription,
                         fontSize = 30.sp,
                         color = com.example.cupcake.ui.theme.text_white,
                         modifier = Modifier.padding(vertical = 8.dp),
@@ -104,7 +116,7 @@ fun DashboardScreen(navController: NavController) {
                         modifier = Modifier.padding(vertical = 8.dp),
                     )
                     Text(
-                        text = "temp",
+                        text = feelsLikeTemperature,
                         fontSize = 30.sp,
                         color = com.example.cupcake.ui.theme.text_white,
                         modifier = Modifier.padding(vertical = 8.dp),

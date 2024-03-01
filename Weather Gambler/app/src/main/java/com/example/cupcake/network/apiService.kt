@@ -9,7 +9,7 @@ import java.io.IOException
 object ApiService {
     suspend fun fetchJsonData(): String = withContext(Dispatchers.IO) {
         val client = OkHttpClient()
-        val url = "https://api.weatherbit.io/v2.0/forecast/daily?city=Pheonix,AZ&key=YOUR_API_KEY" // Replace YOUR_API_KEY with your actual API key
+        val url = "https://api.weatherbit.io/v2.0/forecast/daily?city=Pheonix,AZ&key=e932f12ab1cf4ec0b3c81e0f61a506a9" // Replace YOUR_API_KEY with your actual API key
         val request = Request.Builder()
             .url(url)
             .build()
