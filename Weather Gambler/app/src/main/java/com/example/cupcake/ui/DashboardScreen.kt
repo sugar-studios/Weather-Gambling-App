@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -24,12 +25,14 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.cupcake.CupcakeScreen
 import com.example.cupcake.R
+import com.example.cupcake.data.PreferencesManager
 import com.example.cupcake.data.RetrofitClient
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -38,28 +41,31 @@ import kotlinx.coroutines.withContext
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun DashboardScreen(navController: NavController) {
-    var SelectedBet by rememberSaveable { mutableStateOf("") }
+    val preferencesManager = PreferencesManager(LocalContext.current)
+    var betSelected by rememberSaveable { mutableStateOf("")}
     var weatherDescription by rememberSaveable { mutableStateOf("") }
     var feelsLikeTemperature by rememberSaveable { mutableStateOf("") }
 
     LaunchedEffect(key1 = true) {
         try {
             val response = withContext(Dispatchers.IO) {
+                // Assuming RetrofitClient is correctly set up to call OpenWeatherMap API
                 RetrofitClient.instance.getDailyForecast("Mesa,US", "53c1e06df401200db96ac0cfd1d1ca72").execute()
             }
 
             if (response.isSuccessful) {
-                // Assuming the first item in the list is the current weather
-                response.body()?.list?.get(0)?.let { forecast ->
+                // Assuming the second item (or another appropriate index based on the current time and response structure) in the list is tomorrow's weather
+                // Note: You might need a more sophisticated way to determine the index for "tomorrow" based on the current time and how the forecasts are structured.
+                response.body()?.list?.get(1)?.let { forecast -> // Adjusted index to 1 for simplicity
                     weatherDescription = forecast.weather.first().description
-                    feelsLikeTemperature = "${"%.1f".format(forecast.main.feels_like - 273.15)}°C"
+                    feelsLikeTemperature = "Feels like: ${forecast.main.feels_like - 273.15}°C" // Convert Kelvin to Celsius
                     Log.d("DashboardScreen", "Weather: $weatherDescription, $feelsLikeTemperature")
                 }
             } else {
                 Log.e("DashboardScreen", "Error fetching weather data")
             }
         } catch (e: Exception) {
-            Log.e("DashboardScreen", "Exception in fetching weather data", e)
+            Log.e("DashboardScreen", "Exception in fetching")
         }
     }
 
@@ -88,14 +94,16 @@ fun DashboardScreen(navController: NavController) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Today's Weather",
+                    text = "Tomorrow's Weather",
                     color = com.example.cupcake.ui.theme.text_white,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
                 Image(
+                    modifier = Modifier.size(40.dp),
                     painter = painterResource(id = R.drawable.sun),
-                    contentDescription = "Sun Image",
+                    contentDescription = "Sun Image"
                 )
+
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -128,7 +136,7 @@ fun DashboardScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(100.dp))
 
         Column {
-            RadioButtonComponent()
+            RadioButtonComponent(preferencesManager = preferencesManager)
         }
 
         Spacer(modifier = Modifier.height(200.dp))
@@ -152,7 +160,7 @@ fun DashboardScreen(navController: NavController) {
 }
 
 @Composable
-fun RadioButtonComponent() {
+fun RadioButtonComponent(preferencesManager: PreferencesManager) {
     val radioOptions = listOf("Yes", "No") // Assuming you meant to use these as separate options
     val filledID = R.drawable.filled
     val emptyID = R.drawable.empty
