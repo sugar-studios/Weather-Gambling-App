@@ -81,6 +81,11 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.extra["lifecycle_version"]}")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:${rootProject.extra["lifecycle_version"]}")
     implementation("androidx.navigation:navigation-compose:2.7.4")
+    implementation("com.android.volley:volley:1.2.1")
+    implementation("com.google.code.gson:gson:2.10")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.10.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
@@ -88,28 +93,6 @@ dependencies {
     androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
 
-
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.compose.ui:ui-tooling")
-
-    implementation("com.android.volley:volley-cronet:1.2.1")
-    implementation("com.google.code.gson:gson:2.10")
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.11.0")
-    implementation ("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation ("com.google.code.gson:gson:2.8.8")
-    implementation ("com.squareup.okhttp3:okhttp:4.9.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0")
-    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0")
-    implementation("it.skrape:skrapeit:1.2.2")
-    implementation ("com.github.kittinunf.fuel:fuel:2.3.1")
-    implementation ("com.github.kittinunf.fuel:fuel-gson:2.3.1") // For Gson support
-    implementation ("khttp:khttp:1.0.0")
-
-
-
-
-
 }
