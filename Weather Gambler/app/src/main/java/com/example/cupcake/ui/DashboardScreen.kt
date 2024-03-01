@@ -134,22 +134,6 @@ fun DashboardScreen(navController: NavController) {
                 text = "Instructions"
             )
         }
-
-        Button(
-            onClick = { navController.navigate(CupcakeScreen.Results.name) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-                .padding(horizontal = 25.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = com.example.cupcake.ui.theme.md_theme_light_tertiary
-            )
-        ) {
-            Text(
-                fontSize = 20.sp,
-                text = "Previous REsults"
-            )
-        }
     }
 }
 
