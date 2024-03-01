@@ -120,7 +120,7 @@ fun DashboardScreen(navController: NavController) {
         Spacer(modifier = Modifier.height(200.dp))
 
         Button(
-            onClick = { navController.navigate(CupcakeScreen.Instructions.name) },
+            onClick = { navController.navigate(CupcakeScreen.Weather.name) },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(48.dp)
@@ -147,7 +147,7 @@ fun DashboardScreen(navController: NavController) {
         ) {
             Text(
                 fontSize = 20.sp,
-                text = "Previous Reults"
+                text = "Previous REsults"
             )
         }
     }

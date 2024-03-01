@@ -112,14 +112,7 @@ fun ResultsScreen(navController: NavController) {
         ) {
             Text("Go to Main Dashboard")
         }
-
-        Button(
-            onClick = { navController.navigate(CupcakeScreen.Credits.name) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(48.dp)
-        ) {
-            Text("App Credits")
-        }
+        Text(text = "made by Alex",
+                color = com.example.cupcake.ui.theme.text_white)
     }
 }

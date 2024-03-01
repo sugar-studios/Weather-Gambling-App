@@ -33,17 +33,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.cupcake.ui.DashboardScreen
 import com.example.cupcake.ui.ResultsScreen
-import com.example.cupcake.ui.PastGamblesScreen
-import com.example.cupcake.ui.CreditsScreen
 
 /**
  * enum values that represent the screens in the app
  */
 enum class CupcakeScreen(@StringRes val title: Int) {
     Home(title = R.string.app_name),
-    Instructions(title = R.string.app_name),
-    Results(title = R.string.app_name),
-    Credits(title = R.string.app_name)
+    Weather(title = R.string.app_name),
+    Results(title = R.string.app_name)
 }
 
 @Composable
@@ -70,14 +67,8 @@ fun CupcakeApp(
             composable(route = CupcakeScreen.Home.name) {
                 DashboardScreen(navController = navController)
             }
-            composable(route = CupcakeScreen.Instructions.name) {
+            composable(route = CupcakeScreen.Weather.name) {
                 ResultsScreen(navController = navController)
-            }
-            composable(route = CupcakeScreen.Results.name) {
-                PastGamblesScreen(navController = navController)
-            }
-            composable(route = CupcakeScreen.Credits.name) {
-                CreditsScreen(navController = navController)
             }
         }
     }
