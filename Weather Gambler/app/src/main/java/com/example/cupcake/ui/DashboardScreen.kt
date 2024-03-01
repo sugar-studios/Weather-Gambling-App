@@ -60,7 +60,7 @@ fun DashboardScreen(navController: NavController) {
         Text(text = "Fetched JSON: $weatherJSON")
 
         // The rest of your DashboardScreen content
-
+    }
 
         Row(
             modifier = Modifier
