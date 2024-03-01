@@ -40,6 +40,7 @@ import com.example.cupcake.ui.ResultsScreen
 enum class CupcakeScreen(@StringRes val title: Int) {
     Home(title = R.string.app_name),
     Weather(title = R.string.app_name),
+    Results(title = R.string.app_name)
 }
 
 @Composable
