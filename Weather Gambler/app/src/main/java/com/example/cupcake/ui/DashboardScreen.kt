@@ -19,14 +19,17 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -34,7 +37,9 @@ import com.example.cupcake.CupcakeScreen
 import com.example.cupcake.R
 import com.example.cupcake.data.PreferencesManager
 import com.example.cupcake.data.RetrofitClient
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
@@ -58,7 +63,7 @@ fun DashboardScreen(navController: NavController) {
                 // Note: You might need a more sophisticated way to determine the index for "tomorrow" based on the current time and how the forecasts are structured.
                 response.body()?.list?.get(1)?.let { forecast -> // Adjusted index to 1 for simplicity
                     weatherDescription = forecast.weather.first().description
-                    feelsLikeTemperature = "Feels like: ${forecast.main.feels_like - 273.15}°C" // Convert Kelvin to Celsius
+                    feelsLikeTemperature = "${(forecast.main.feels_like - 273.15).toInt()}°C"
                     Log.d("DashboardScreen", "Weather: $weatherDescription, $feelsLikeTemperature")
                 }
             } else {
@@ -139,7 +144,7 @@ fun DashboardScreen(navController: NavController) {
             RadioButtonComponent(preferencesManager = preferencesManager)
         }
 
-        Spacer(modifier = Modifier.height(200.dp))
+        Spacer(modifier = Modifier.height(20.dp))
 
         Button(
             onClick = { navController.navigate(CupcakeScreen.Weather.name) },
@@ -161,18 +166,26 @@ fun DashboardScreen(navController: NavController) {
 
 @Composable
 fun RadioButtonComponent(preferencesManager: PreferencesManager) {
-    val radioOptions = listOf("Yes", "No") // Assuming you meant to use these as separate options
+    val context = LocalContext.current
     val filledID = R.drawable.filled
     val emptyID = R.drawable.empty
-    var yesBtnState by rememberSaveable { mutableStateOf(emptyID) }
-    var noBtnState by rememberSaveable { mutableStateOf(emptyID) }
+
+    // Use collectAsState to observe changes in the preference and update the UI accordingly
+    val selectedBet by preferencesManager.selectedBet.collectAsState(initial = "")
+
+    // Determine button states based on the stored preference
+    val yesBtnState = if (selectedBet == "Yes") filledID else emptyID
+    val noBtnState = if (selectedBet == "No") filledID else emptyID
 
     Column {
         Button(
             onClick = {
-                yesBtnState = if (yesBtnState == emptyID) filledID else emptyID
-                noBtnState = emptyID // Ensure only one can be selected at a time
-            }
+                // Update the preference when the button is clicked
+                CoroutineScope(Dispatchers.IO).launch {
+                    preferencesManager.setSelectedBet(if (selectedBet != "Yes") "Yes" else "")
+                }
+            },
+            colors = ButtonDefaults.buttonColors(Color.Transparent)
         ) {
             Row(
                 modifier = Modifier
@@ -194,13 +207,15 @@ fun RadioButtonComponent(preferencesManager: PreferencesManager) {
                     text = "Bet the Weather is going to be incorrect",
                     color = com.example.cupcake.ui.theme.text_white)
             }
-            }
         }
         Button(
             onClick = {
-                noBtnState = if (noBtnState == emptyID) filledID else emptyID
-                yesBtnState = emptyID // Ensure only one can be selected at a time
-            }
+                // Update the preference when the button is clicked
+                CoroutineScope(Dispatchers.IO).launch {
+                    preferencesManager.setSelectedBet(if (selectedBet != "No") "No" else "")
+                }
+            },
+            colors = ButtonDefaults.buttonColors(Color.Transparent)
         ) {
             Row(
                 modifier = Modifier
@@ -224,5 +239,16 @@ fun RadioButtonComponent(preferencesManager: PreferencesManager) {
             }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DashboardScreenPreview() {
+    // Mock NavController for preview
+    val navController = NavController(LocalContext.current)
+
+    DashboardScreen(navController = navController)
+}
+
 
 
