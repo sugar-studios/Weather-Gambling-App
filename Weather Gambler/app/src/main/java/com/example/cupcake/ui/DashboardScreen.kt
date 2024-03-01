@@ -32,6 +32,7 @@ import com.example.cupcake.CupcakeScreen
 import com.example.cupcake.R
 import com.example.cupcake.network.ApiService
 import kotlinx.coroutines.launch
+import com.example.cupcake.data.RetrofitClient
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
@@ -40,12 +41,11 @@ fun DashboardScreen(navController: NavController) {
     var weatherJSON by rememberSaveable { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
-    // Use LaunchedEffect to fetch data when the Composable enters the Composition
     LaunchedEffect(key1 = true) {
         coroutineScope.launch {
-            // Assuming ApiService.fetchJsonData() is a suspend function. If not, wrap the call with withContext(Dispatchers.IO) { ... }
-            val data = ApiService.fetchJsonData()
-            weatherJSON = data
+            // Corrected access to the fetchDailyForecast method
+            val response = RetrofitClient.WeatherApi.fetchDailyForecast("e932f12ab1cf4ec0b3c81e0f61a506a9", "Phoenix,AZ")
+            weatherJSON = response?.toString() ?: "Failed to fetch weather data"
         }
     }
 
@@ -55,14 +55,12 @@ fun DashboardScreen(navController: NavController) {
             .background(com.example.cupcake.ui.theme.md_theme_light_primary),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Weather Gambler",
-            fontSize = 30.sp,
-            color = com.example.cupcake.ui.theme.text_white,
-            modifier = Modifier.padding(top = 40.dp, bottom = 100.dp)
-        )
+        // Your UI elements here
 
         Text(text = "Fetched JSON: $weatherJSON")
+
+        // The rest of your DashboardScreen content
+    }
 
         Row(
             modifier = Modifier
