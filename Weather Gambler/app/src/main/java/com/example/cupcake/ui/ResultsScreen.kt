@@ -16,11 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.cupcake.CupcakeScreen
 import com.example.cupcake.R
+import com.example.cupcake.ui.theme.CupcakeTheme
 
 @Composable
 fun ResultsScreen(navController: NavController) {
@@ -112,7 +115,7 @@ fun ResultsScreen(navController: NavController) {
                 text = "As they say, the weather man is always wrong. But they also say the house always wins!",
                 color = com.example.cupcake.ui.theme.text_white,
                 modifier = Modifier
-                    .padding(bottom = 40.dp, top = 40.dp),
+                    .padding(bottom = 35.dp, top = 40.dp),
                 fontSize = 20.sp,
             )
         }
@@ -128,12 +131,20 @@ fun ResultsScreen(navController: NavController) {
         }
         item {
             Text(
-                text = "made by Alex",
+                text = "Based from Android template; App by Alex",
+                fontSize = 10.sp,
                 color = com.example.cupcake.ui.theme.text_white
             )
         }
     }
 }
 
-
+@Preview(showBackground = true)
+@Composable
+fun ResultsScreenPreview() {
+    CupcakeTheme {
+        val mockNavController = rememberNavController()
+        ResultsScreen(navController = mockNavController)
+    }
+}
 
